@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
-import { useRoute } from "vue-router";
+// import { useRoute } from "vue-router";
 import { useChatsStore } from "~/store/chats";
-const router = useRouter();
-router.push("/chat");
+// const router = useRoute();
+// router.push("/chat");
 
 const file = ref<File | null>(null);
 const fileInputRef = ref<HTMLInputElement | null>(null);
@@ -27,18 +27,18 @@ const selectedChat = computed(() => {
   return chatsStore.selectChatById(chatId) ?? null;
 });
 
-onMounted(async () => {
-  if (!selectedChat.value) {
-    await chatsStore.fetchData();
-  }
-  await import("emoji-picker-element");
-  emojiPickerReady.value = true;
-});
+// onMounted(async () => {
+//   if (!selectedChat.value) {
+//     await chatsStore.fetchData();
+//   }
+//   await import("emoji-picker-element");
+//   emojiPickerReady.value = true;
+// });
 
-function onEmojiClick(event: any) {
-  const emoji = event.detail.emoji;
-  message.value += emoji;
-}
+// function onEmojiClick(event: any) {
+//   const emoji = event.detail.emoji;
+//   message.value += emoji;
+// }
 
 function formatTimestamp(timestamp: string) {
   let date = new Date(timestamp);
