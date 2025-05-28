@@ -21,7 +21,7 @@
 
       <NuxtLink
         to="/"
-        class="font-montserrat text-sm uppercase bg-[#264061] text-white font-bold rounded-full px-8 py-4 inline-block shadow-[0_4px_15px_-5px_#0046d5] transition-transform transition-opacity hover:opacity-90 hover:scale-105 active:opacity-80 active:scale-110 active:text-black">
+        class="font-montserrat text-sm uppercase bg-[#264061] text-white font-bold rounded-full px-8 py-4 inline-block shadow-[0_4px_15px_-5px_#0046d5] transition-opacity hover:opacity-90 hover:scale-105 active:opacity-80 active:scale-110 active:text-black">
         Go To Homepage
       </NuxtLink>
     </div>

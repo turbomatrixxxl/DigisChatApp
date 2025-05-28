@@ -12,11 +12,11 @@ export default defineNuxtConfig({
     },
   },
   app: {
-    baseURL: "/",
+    baseURL: "/DigisChatApp/",
   },
   runtimeConfig: {
     public: {
-      baseURL: "/",
+      baseURL: "/DigisChatApp/",
     },
   },
   vite: {
