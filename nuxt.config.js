@@ -1,8 +1,8 @@
-// nuxt.config.js
-// nuxt.config.js
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
+  ssr: false, // 🟡 important pentru GitHub Pages
+  target: "static", // 🟡 sau folosește generate
   modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt"],
   css: ["~/assets/styles/tailwind.css", "~/assets/styles/variables.css"],
   postcss: {
@@ -12,11 +12,12 @@ export default defineNuxtConfig({
     },
   },
   app: {
-    baseURL: "/DigisChatApp/", // static base URL for router
+    baseURL: "/DigisChatApp/",
+    cdnURL: "/DigisChatApp/", // ✅ adaugă și cdnURL
   },
   runtimeConfig: {
     public: {
-      baseURL: "/DigisChatApp/", // same base URL accessible in the app as runtime config
+      baseURL: "/DigisChatApp/",
     },
   },
   vite: {

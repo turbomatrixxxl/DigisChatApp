@@ -2,7 +2,8 @@
 import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
 import { useChatsStore } from "~/store/chats";
-import IndexPage from "~/pages/chat/index.vue";
+const router = useRouter();
+router.push("/chat");
 
 const file = ref<File | null>(null);
 const fileInputRef = ref<HTMLInputElement | null>(null);
@@ -22,7 +23,9 @@ const message = ref("");
 const showEmojiPicker = ref(false);
 const emojiPickerReady = ref(false);
 
-const selectedChat = computed(() => chatsStore.selectChatById(chatId));
+const selectedChat = computed(() => {
+  return chatsStore.selectChatById(chatId) ?? null;
+});
 
 onMounted(async () => {
   if (!selectedChat.value) {
@@ -66,15 +69,22 @@ function handleSendMsg() {
   if (!message.value.trim() && !file.value) return;
 
   const content = message.value.trim();
-  const fileUrl = file.value
-    ? (window.URL || window.webkitURL).createObjectURL(file.value)
-    : null;
+
+  const fileUrl =
+    typeof window !== "undefined" && file.value
+      ? URL.createObjectURL(file.value)
+      : null;
+
+  const messageId =
+    typeof crypto !== "undefined" && crypto.randomUUID
+      ? crypto.randomUUID()
+      : Date.now().toString(); // fallback ID
 
   chatsStore.updateChat({
     chatId,
     newMessages: [
       {
-        id: crypto.randomUUID(),
+        id: messageId,
         content,
         file: fileUrl ?? undefined,
         fileType: file.value?.type ?? undefined,
@@ -107,92 +117,98 @@ function toggleEmojiPicker() {
 </script>
 
 <template>
-  <div class="chatPage" v-if="selectedChat">
-    <ul class="messageList">
-      <li
-        v-for="msg in selectedChat.messages"
-        :key="msg.id"
-        :class="[msg.isInbox ? 'outbox' : 'inbox']">
-        <template v-if="msg.isInbox">
-          <span class="ownerName">Radu Bogdan</span>
-          <span class="msgOutboxContent">{{ msg.content }}</span>
-          <span v-if="msg.file" class="filePreview">
-            <img
-              v-if="msg.fileType?.startsWith('image/')"
-              :src="msg.file"
-              alt="Preview"
-              class="imagePreview" />
-            <a v-else :href="msg.file" target="_blank">{{ msg.file }}</a>
-          </span>
-          <span class="timestampOutbox">
-            {{
-              msg.sentAt ? formatTimestamp(msg.sentAt) : "Time not available"
-            }}
-          </span>
-        </template>
-        <template v-else>
-          <span class="msgInboxContent">{{ msg.content }}</span>
-          <span v-if="msg.file" class="filePreview">
-            <img
-              v-if="msg.fileType?.startsWith('image/')"
-              :src="msg.file"
-              alt="Preview"
-              class="imagePreview" />
-            <a v-else :href="msg.file" target="_blank">{{ msg.file }}</a>
-          </span>
-          <span class="timestampInbox">
-            {{
-              msg.sentAt ? formatTimestamp(msg.sentAt) : "Time not available"
-            }}
-          </span>
-        </template>
-      </li>
+  <div>
+    <div v-if="selectedChat" class="chatPage">
+      <!-- Conținutul chat-ului tău -->
+      <ul class="messageList">
+        <li
+          v-for="msg in selectedChat.messages"
+          :key="msg.id"
+          :class="[msg.isInbox ? 'outbox' : 'inbox']">
+          <!-- conținutul mesajelor -->
+          <template v-if="msg.isInbox">
+            <span class="ownerName">Radu Bogdan</span>
+            <span class="msgOutboxContent">{{ msg.content }}</span>
+            <span v-if="msg.file" class="filePreview">
+              <img
+                v-if="msg.fileType?.startsWith('image/')"
+                :src="msg.file"
+                alt="Preview"
+                class="imagePreview" />
+              <a v-else :href="msg.file" target="_blank">{{ msg.file }}</a>
+            </span>
+            <span class="timestampOutbox">
+              {{
+                msg.sentAt ? formatTimestamp(msg.sentAt) : "Time not available"
+              }}
+            </span>
+          </template>
+          <template v-else>
+            <span class="msgInboxContent">{{ msg.content }}</span>
+            <span v-if="msg.file" class="filePreview">
+              <img
+                v-if="msg.fileType?.startsWith('image/')"
+                :src="msg.file"
+                alt="Preview"
+                class="imagePreview" />
+              <a v-else :href="msg.file" target="_blank">{{ msg.file }}</a>
+            </span>
+            <span class="timestampInbox">
+              {{
+                msg.sentAt ? formatTimestamp(msg.sentAt) : "Time not available"
+              }}
+            </span>
+          </template>
+        </li>
 
-      <li v-if="file" class="filePreview">
-        <img
-          v-if="file.type.startsWith('image/')"
-          :src="filePreviewUrl"
-          alt="File Preview"
-          class="imagePreview" />
-        <span v-else>{{ file.name }}</span>
-      </li>
-    </ul>
+        <li v-if="file" class="filePreview">
+          <img
+            v-if="file.type.startsWith('image/')"
+            :src="filePreviewUrl"
+            alt="File Preview"
+            class="imagePreview" />
+          <span v-else>{{ file.name }}</span>
+        </li>
+      </ul>
 
-    <div class="sendMsgCont">
-      <input
-        v-model="message"
-        type="text"
-        placeholder="Type something here..."
-        class="sendMsgInput"
-        @keydown.enter.prevent="handleSendMsg" />
-      <button type="button" class="writeMsgButton" @click="handleAttachClick">
-        <!-- SVG atașament -->
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="var(--Text-color)"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24">
-          <path
-            d="M16.5 6a3 3 0 0 0-4.15 0L7 11.4a1.75 1.75 0 0 0 2.46 2.46l4.95-4.95a1.25 1.25 0 1 1 1.76 1.76l-5.65 5.66a3.75 3.75 0 1 1-5.3-5.3L11.2 5.1a5 5 0 0 1 7.08 7.07l-6.3 6.3a6.25 6.25 0 0 1-8.83-8.83l7.2-7.2a3.75 3.75 0 0 1 5.3 5.3L9.25 15.3" />
-        </svg>
-      </button>
-      <input
-        type="file"
-        class="hidden"
-        ref="fileInputRef"
-        @change="handleFileChange" />
-      <button type="button" class="emojiButton" @click="toggleEmojiPicker">
-        😊
-      </button>
+      <div class="sendMsgCont">
+        <input
+          v-model="message"
+          type="text"
+          placeholder="Type something here..."
+          class="sendMsgInput"
+          @keydown.enter.prevent="handleSendMsg" />
+        <button type="button" class="writeMsgButton" @click="handleAttachClick">
+          <!-- SVG atașament -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="var(--Text-color)"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24">
+            <path
+              d="M16.5 6a3 3 0 0 0-4.15 0L7 11.4a1.75 1.75 0 0 0 2.46 2.46l4.95-4.95a1.25 1.25 0 1 1 1.76 1.76l-5.65 5.66a3.75 3.75 0 1 1-5.3-5.3L11.2 5.1a5 5 0 0 1 7.08 7.07l-6.3 6.3a6.25 6.25 0 0 1-8.83-8.83l7.2-7.2a3.75 3.75 0 0 1 5.3 5.3L9.25 15.3" />
+          </svg>
+        </button>
+        <input
+          type="file"
+          class="hidden"
+          ref="fileInputRef"
+          @change="handleFileChange" />
+        <button type="button" class="emojiButton" @click="toggleEmojiPicker">
+          😊
+        </button>
 
-      <emoji-picker
-        v-if="emojiPickerReady"
-        ref="emojiPickerRef"
-        style="position: absolute; bottom: 55px; right: 15px"
-        @emoji-click="onEmojiClick" />
+        <ClientOnly>
+          <emoji-picker
+            v-if="emojiPickerReady"
+            ref="emojiPickerRef"
+            style="position: absolute; bottom: 55px; right: 15px"
+            @emoji-click="onEmojiClick" />
+        </ClientOnly>
+      </div>
     </div>
-  </div>
 
-  <IndexPage v-else />
+    <IndexPage v-else />
+  </div>
 </template>
