@@ -199,13 +199,13 @@ function toggleEmojiPicker() {
           😊
         </button>
 
-        <ClientOnly>
+        <!-- <ClientOnly>
           <emoji-picker
             v-if="emojiPickerReady"
             ref="emojiPickerRef"
             style="position: absolute; bottom: 55px; right: 15px"
             @emoji-click="onEmojiClick" />
-        </ClientOnly>
+        </ClientOnly> -->
       </div>
     </div>
 
