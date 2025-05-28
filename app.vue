@@ -1,7 +1,25 @@
+<script setup lang="ts">
+import { onMounted } from "vue";
+import { useChatsStore } from "~/store/chats";
+
+const chatsStore = useChatsStore();
+
+onMounted(() => {
+  chatsStore.fetchData();
+});
+</script>
+
 <template>
-  <div>
-    <NuxtRouteAnnouncer />
-    <!-- <NuxtWelcome /> -->
-    <div class="bg-red-500 text-white p-4">Hello Tailwind!</div>
-  </div>
+  <Suspense>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+    <template #fallback>
+      <Loader />
+    </template>
+  </Suspense>
 </template>
+
+<script lang="ts">
+import Loader from "~/components/common/Loader.vue";
+</script>

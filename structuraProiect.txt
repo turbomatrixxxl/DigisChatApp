@@ -1,0 +1,45 @@
+/nuxt-app/
+├── assets/
+│   ├── images/
+│   │   ├── icons/
+│   │   │   └── browser-error-404-icon.svg
+│   │   └── Radu.webp
+│   └── styles/
+│       ├── variables.css
+│       └── tailwind.css
+│
+├── components/
+│   ├── ActiveChatModal.vue
+│   ├── ChatsList.vue
+│   ├── Footer.vue
+│   ├── Header.vue
+│   ├── ModalFooter.vue
+│   ├── SharedLayout.vue
+│   └── common/
+│       ├── FooterLogo.vue
+│       ├── FormButton.vue
+│       ├── Input.vue
+│       └── Loader.vue
+│
+├── composables/
+│   ├── useChats.ts  #nu e nevoie aici importi din pinia !!!
+│   └── useToggle.ts
+│
+├── data/
+│   └── mock-chats.json
+│
+├── pages/
+│   ├── index.vue               # HomePage
+│   ├── chat.vue                # ChatPage
+│   └── not-found.vue           # NotFoundPage
+│
+├── public/
+│   └── favicon.ico
+│
+├── stores/
+│   └── chats.ts                # Pinia store
+│
+├── app.vue                     # Layout container
+├── nuxt.config.ts              # Nuxt config file
+├── tailwind.config.ts          # Tailwind config
+└── tsconfig.json               # TypeScript config
