@@ -8,7 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "deploy": "nuxt generate && gh-pages -d .output/public"
+    "deploy": "nuxt generate && npx gh-pages -d .output/public"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
