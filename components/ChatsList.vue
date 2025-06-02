@@ -53,7 +53,7 @@ function onChatClick(chatId: string) {
 </script>
 
 <template>
-  <div class="flex flex-col h-500 overflow-auto">
+  <div class="flex flex-col overflow-auto">
     <div v-if="chatsStore.loading" class="p-4 text-center text-gray-600">
       Loading chats...
     </div>
