@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 // import { useRoute } from "vue-router";
 import { useChatsStore } from "~/store/chats";
+import WelcomeMessage from "~/components/WelcomeMessage.vue";
 // const router = useRoute();
 // router.push("/chat");
 
@@ -209,6 +210,6 @@ function toggleEmojiPicker() {
       </div>
     </div>
 
-    <IndexPage v-else />
+    <WelcomeMessage v-else />
   </div>
 </template>

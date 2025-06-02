@@ -7,40 +7,53 @@ import FormButton from "~/components/common/FormButton.vue";
 
 import Radu from "~/assets/images/Radu.webp";
 
-const props = defineProps({
-  closeModal: Function,
+const { closeModal } = defineProps({
+  closeModal: {
+    type: Function,
+    required: true,
+  },
 });
 
-const modalRef = ref(null);
+const modalContentRef = ref(null);
+
+const handleClickOutside = (event) => {
+  setTimeout(() => {
+    if (
+      modalContentRef.value &&
+      !modalContentRef.value.contains(event.target)
+    ) {
+      closeModal();
+    }
+  }, 50); // întârziere minimă
+};
+
+const handleEsc = (e) => {
+  if (e.key === "Escape") {
+    closeModal();
+  }
+};
 
 onMounted(() => {
   document.body.style.overflow = "hidden";
-  const onEsc = (e) => {
-    if (e.key === "Escape") props.closeModal();
-  };
-  window.addEventListener("keydown", onEsc);
-
-  onUnmounted(() => {
-    document.body.style.overflow = "auto";
-    window.removeEventListener("keydown", onEsc);
-  });
+  window.addEventListener("keydown", handleEsc);
+  window.addEventListener("mousedown", handleClickOutside);
 });
 
-const closeOnClickOutside = (event) => {
-  if (event.target === modalRef.value) props.closeModal();
-};
+onUnmounted(() => {
+  document.body.style.overflow = "auto";
+  window.removeEventListener("keydown", handleEsc);
+  window.removeEventListener("mousedown", handleClickOutside);
+});
 
 const isDesktop = useMediaQuery("(min-width: 768px)");
-
 const animationClasses = "animate__animated animate__fadeInDown animate__slow";
 </script>
 
 <template>
   <div
-    ref="modalRef"
-    @click="closeOnClickOutside"
     class="fixed inset-0 z-[150] cursor-default transition-all duration-300 ease-in-out bg-[rgba(34,13,91,0.23)] backdrop-blur-sm flex items-center justify-center">
     <div
+      ref="modalContentRef"
       class="flex flex-col items-center gap-2 w-[333px] p-4 pt-2 sm:w-[533px] sm:rounded-lg sm:p-5 bg-[var(--primary-color)] shadow-[0_4px_60px_rgba(0,0,0,0.25)] backdrop-blur-[50px]">
       <ModalLogo v-if="isDesktop" variant="formLogo" />
 
@@ -64,7 +77,6 @@ const animationClasses = "animate__animated animate__fadeInDown animate__slow";
           <div class="flex ml-4 sm:ml-0 gap-4 text-white text-2xl">
             <a
               href="https://github.com/turbomatrixxxl"
-              aria-label="GitHub profile"
               target="_blank"
               rel="noopener noreferrer"
               class="hover:text-[#ff868d] active:text-[#ff868d] transition-colors duration-300">
@@ -72,7 +84,6 @@ const animationClasses = "animate__animated animate__fadeInDown animate__slow";
             </a>
             <a
               href="https://www.linkedin.com/in/radu-bogdan-naramzoiu-fullstack-developer/"
-              aria-label="LinkedIn profile"
               target="_blank"
               rel="noopener noreferrer"
               class="hover:text-[#ff868d] active:text-[#ff868d] transition-colors duration-300">
@@ -85,8 +96,8 @@ const animationClasses = "animate__animated animate__fadeInDown animate__slow";
       <FormButton
         type="button"
         text="Thank You"
-        variant="whiteButtton"
-        :handlerFunction="props.closeModal"
+        variant="whiteButton"
+        :handlerFunction="closeModal"
         class="mt-4" />
     </div>
   </div>

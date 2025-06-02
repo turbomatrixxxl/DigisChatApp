@@ -28,7 +28,7 @@ const toggleModal = () => (showModal.value = !showModal.value);
 </script>
 
 <template>
-  <div class="relative">
+  <div>
     <header
       class="flex items-center justify-between px-7 h-[88px] border-b"
       :style="{

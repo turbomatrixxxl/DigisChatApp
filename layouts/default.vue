@@ -27,7 +27,7 @@
                 class="w-[18px] h-[18px] text-slate-500" />
             </button>
           </Input>
-          <div class="flex flex-col h-[430px] overflow-y-auto">
+          <div class="flex flex-col h-[280px] overflow-y-auto">
             <ChatsList :search="search" />
           </div>
         </div>
