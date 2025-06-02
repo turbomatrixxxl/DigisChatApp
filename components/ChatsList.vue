@@ -53,7 +53,7 @@ function onChatClick(chatId: string) {
 </script>
 
 <template>
-  <div class="flex flex-col h-500 overflow-auto"">
+  <div class="flex flex-col h-500 overflow-auto">
     <div v-if="chatsStore.loading" class="p-4 text-center text-gray-600">
       Loading chats...
     </div>
@@ -66,31 +66,33 @@ function onChatClick(chatId: string) {
       class="flex flex-col gap-2 p-0 list-none w-full overflow-auto">
       <li
         v-for="chat in filteredChats"
-        :key="chat.id"
-        @click="onChatClick(chat.id)"
+        :key="chat?.id"
+        @click="onChatClick(chat?.id)"
         :class="[
           'flex items-center gap-3 p-2 rounded-md cursor-pointer',
-          route.params.chatId === chat.id
+          route.params.chatId === chat?.id
             ? 'bg-gray-300'
             : 'bg-white hover:bg-gray-100',
         ]">
         <div class="relative flex items-center justify-center w-fit">
           <img
             :key="reloadMap[chat.id] || 0"
-            :src="chat.user?.avatar || ''"
+            :src="chat?.user?.avatar || ''"
             alt="User avatar"
             loading="lazy"
-            @error="() => handleImageError(chat.id)"
+            @error="() => handleImageError(chat?.id)"
             class="w-11 h-11 rounded-full flex-shrink-0 object-cover" />
           <span
             class="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-gray-300"
-            :class="chat.user?.isOnline ? 'bg-green-500' : 'bg-red-500'"></span>
+            :class="
+              chat?.user?.isOnline ? 'bg-green-500' : 'bg-red-500'
+            "></span>
         </div>
         <div class="flex flex-col overflow-hidden w-full">
           <p
             class="text-gray-900 font-medium text-sm truncate"
-            :title="chat.user?.id || ''">
-            {{ chat.user?.id }}
+            :title="chat?.user?.id || ''">
+            {{ chat?.user?.id }}
           </p>
           <p
             class="text-gray-500 text-sm font-medium truncate"
