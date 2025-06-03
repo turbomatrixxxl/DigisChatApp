@@ -39,11 +39,23 @@ export const useChatsStore = defineStore("chats", {
     async fetchData() {
       this.loading = true;
       this.error = null;
+
+      // Detectăm dacă rulăm în mod static (generate) sau server-side
+      const isStatic =
+        process.env.NODE_ENV === "production" && typeof window === "undefined";
+
       try {
-        const response = await axios.get("/c/5c9a-2b01-4cee-b469");
-        this.chats = response.data;
+        if (isStatic) {
+          // La build static, folosim doar mockData
+          this.chats = mockData;
+          console.log("Using mockData in static mode");
+        } else {
+          // În dev sau client-side, încercăm fetch-ul real
+          const response = await axios.get("/c/5c9a-2b01-4cee-b469");
+          this.chats = response.data;
+        }
       } catch (error: any) {
-        console.warn("API failed, using mock data:", error.message);
+        console.warn("API fetch failed, using mock data:", error.message);
         this.chats = mockData;
       } finally {
         this.loading = false;

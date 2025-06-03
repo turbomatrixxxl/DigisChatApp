@@ -4,7 +4,6 @@
 .nuxt
 .nitro
 .cache
-!.output/public
 !dist
 
 # Node dependencies
