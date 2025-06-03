@@ -1,8 +1,8 @@
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
-  ssr: false,
-  target: "static",
+  ssr: false, // 🟡 important pentru GitHub Pages
+  target: "static", // 🟡 sau folosește generate
   modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt"],
   css: ["~/assets/styles/tailwind.css", "~/assets/styles/variables.css"],
   postcss: {
@@ -22,12 +22,10 @@ export default defineNuxtConfig({
   vite: {
     optimizeDeps: {
       include: ["emoji-picker-element"],
+      exclude: ["vue3-spinner"],
     },
-  },
-  nitro: {
-    prerender: {
-      crawlLinks: true,
-      fallback: "404.html",
+    ssr: {
+      noExternal: ["vue3-spinner"],
     },
   },
 });
