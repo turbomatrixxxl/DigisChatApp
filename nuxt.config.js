@@ -13,12 +13,13 @@ export default defineNuxtConfig({
   app: {
     baseURL: "/DigisChatApp/",
   },
-  runtimeConfig: {
+  runtimeConfig: ()=>({
     public: {
       baseURL: "/DigisChatApp/",
     },
-  },
+  }),
   vite: {
+    base: "/DigisChatApp/",
     optimizeDeps: {
       include: ["emoji-picker-element"],
       exclude: ["vue3-spinner"],
