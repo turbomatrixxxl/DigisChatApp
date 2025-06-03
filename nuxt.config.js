@@ -28,4 +28,7 @@ export default defineNuxtConfig({
       noExternal: ["vue3-spinner"],
     },
   },
+  nitro: {
+    preset: "static",
+  },
 });

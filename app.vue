@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { useChatsStore } from "~/store/chats";
+import Loader from "~/components/common/Loader.vue";
 
 const chatsStore = useChatsStore();
 
@@ -10,16 +11,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <Suspense>
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
+  <NuxtLayout>
+    <NuxtPage />
     <template #fallback>
       <Loader />
     </template>
-  </Suspense>
+  </NuxtLayout>
 </template>
-
-<script lang="ts">
-import Loader from "~/components/common/Loader.vue";
-</script>
