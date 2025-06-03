@@ -1,6 +1,6 @@
 <template>
   <div class="contents">
-    <div class="relative p-[20px] h-full bg-transparent">
+    <div class="relative p-[20px] h-full w-full bg-transparent">
       <div
         class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-md w-full text-center">
         <div class="relative h-[170px] z-[-1]">
