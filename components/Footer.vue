@@ -7,6 +7,7 @@ const openModal = () => {
   modalOpen.value = true;
 };
 const closeModal = () => {
+  // console.log("Modal închis!");
   modalOpen.value = false;
 };
 </script>

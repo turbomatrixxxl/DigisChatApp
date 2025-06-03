@@ -1,16 +1,25 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
-// import { useRoute } from "vue-router";
+import { ref, computed, onMounted } from "vue";
 import { useChatsStore } from "~/store/chats";
 import WelcomeMessage from "~/components/WelcomeMessage.vue";
-// const router = useRoute();
-// router.push("/chat");
+
+const hydrated = ref(false); // <== NOU
+
+onMounted(() => {
+  hydrated.value = true;
+});
 
 const file = ref<File | null>(null);
 const fileInputRef = ref<HTMLInputElement | null>(null);
 const emojiPickerRef = ref<HTMLElement | null>(null);
 
-const filePreviewUrl = computed<string | undefined>(() => {
+// const filePreviewUrl = computed<string | undefined>(() => {
+//   if (!file.value) return undefined;
+//   const urlCreator = window.URL || window.webkitURL;
+//   return urlCreator.createObjectURL(file.value);
+// });
+
+const filePreviewUrl = computed(() => {
   if (!file.value) return undefined;
   const urlCreator = window.URL || window.webkitURL;
   return urlCreator.createObjectURL(file.value);
@@ -18,14 +27,14 @@ const filePreviewUrl = computed<string | undefined>(() => {
 
 const chatsStore = useChatsStore();
 const route = useRoute();
-const chatId = route.params.chatId as string;
+const chatId = route?.params?.chatId as string;
 
 const message = ref("");
 const showEmojiPicker = ref(false);
 const emojiPickerReady = ref(false);
 
 const selectedChat = computed(() => {
-  return chatsStore.selectChatById(chatId) ?? null;
+  return chatsStore?.selectChatById(chatId) ?? null;
 });
 
 // onMounted(async () => {
@@ -118,7 +127,7 @@ function toggleEmojiPicker() {
 </script>
 
 <template>
-  <div>
+  <div v-if="hydrated" class="mainContent">
     <div v-if="selectedChat" class="chatPage">
       <!-- Conținutul chat-ului tău -->
       <ul class="messageList">
@@ -207,9 +216,116 @@ function toggleEmojiPicker() {
             style="position: absolute; bottom: 55px; right: 15px"
             @emoji-click="onEmojiClick" />
         </ClientOnly> -->
+
+        <!-- Buton de trimitere mesaj -->
+        <button type="button" class="sendMsgButton" @click="handleSendMsg">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="var(--Text-color)"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24">
+            <path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z" />
+          </svg>
+        </button>
       </div>
     </div>
 
     <WelcomeMessage v-else />
   </div>
 </template>
+
+<style scoped>
+.mainContent {
+  display: contents;
+}
+
+.chatPage {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  height: 100%;
+  width: -webkit-fill-available;
+}
+
+.messageList {
+  flex: 1;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.inbox,
+.outbox {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.inbox {
+  align-items: flex-end;
+}
+
+.msgInboxContent,
+.msgOutboxContent {
+  background-color: #eff4fb;
+  padding: 8px 12px;
+  border-radius: 8px;
+  max-width: 70%;
+  word-break: break-word;
+}
+
+.msgInboxContent {
+  background-color: #3c50e0;
+}
+
+.timestampInbox,
+.timestampOutbox {
+  font-size: 0.75rem;
+  color: #999;
+  margin-top: 4px;
+}
+
+.ownerName {
+  font-weight: bold;
+  font-size: 0.85rem;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.imagePreview {
+  max-width: 200px;
+  margin-top: 8px;
+  border-radius: 4px;
+}
+
+.sendMsgCont {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid #ccc;
+}
+
+.sendMsgInput {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.writeMsgButton,
+.emojiButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.filePreview {
+  margin-top: 8px;
+}
+</style>

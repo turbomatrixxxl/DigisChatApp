@@ -28,15 +28,15 @@
             </button>
           </Input>
           <div class="flex flex-col h-[280px] overflow-y-auto">
-            <ChatsList :search="search" />
+            <ClientOnlyChatsList :search="search" />
           </div>
         </div>
       </aside>
 
       <!-- Aici se încarcă conținutul paginilor index.vue sau [chatId].vue -->
       <div class="flex flex-col flex-grow h-full">
-        <Header />
-        <main class="flex-grow bg-transparent">
+        <ClientOnly><Header /></ClientOnly>
+        <main class="flex flex-grow bg-transparent h-[100px]">
           <slot />
         </main>
       </div>
@@ -58,6 +58,7 @@ import ChatsList from "@/components/ChatsList.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import ClientOnlyChatsList from "~/components/ClientOnlyChatsList.vue";
 
 library.add(faMagnifyingGlass);
 

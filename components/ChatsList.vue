@@ -3,34 +3,27 @@ import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useChatsStore } from "~/store/chats";
 
-const props = defineProps({
-  search: {
-    type: String,
-    default: "",
-  },
-});
+const props = defineProps<{
+  search: string;
+}>();
 
 const chatsStore = useChatsStore();
 const router = useRouter();
 const route = useRoute();
-
 const reloadMap = ref<Record<string, number>>({});
 
-// Load chats on component mount
 onMounted(() => {
   if (!chatsStore.chats.length) {
     chatsStore.fetchData();
   }
 });
 
-// Reload image on error with delay to avoid flickering
 function handleImageError(chatId: string) {
   setTimeout(() => {
     reloadMap.value[chatId] = (reloadMap.value[chatId] || 0) + 1;
   }, 1000);
 }
 
-// Get last inbox message for a chat
 function getLastInboxMessage(chat: (typeof chatsStore.chats)[0]) {
   const inboxMessages = chat.messages.filter((msg) => msg.isInbox);
   if (!inboxMessages.length) return null;
@@ -39,12 +32,12 @@ function getLastInboxMessage(chat: (typeof chatsStore.chats)[0]) {
   );
 }
 
-// Filter chats by search term (user id)
-const filteredChats = computed(() =>
-  chatsStore.chats.filter((chat) =>
-    chat.user?.id?.toLowerCase().includes(props.search.toLowerCase())
-  )
-);
+const filteredChats = computed(() => {
+  const term = props.search.toLowerCase().trim();
+  return chatsStore.chats.filter((chat) =>
+    chat.user?.id?.toLowerCase().includes(term)
+  );
+});
 
 function onChatClick(chatId: string) {
   chatsStore.accessChat({ chatId });
@@ -88,6 +81,7 @@ function onChatClick(chatId: string) {
               chat?.user?.isOnline ? 'bg-green-500' : 'bg-red-500'
             "></span>
         </div>
+
         <div class="flex flex-col overflow-hidden w-full">
           <p
             class="text-gray-900 font-medium text-sm truncate"

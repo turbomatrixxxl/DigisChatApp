@@ -97,7 +97,12 @@ const animationClasses = "animate__animated animate__fadeInDown animate__slow";
         type="button"
         text="Thank You"
         variant="whiteButton"
-        :handlerFunction="closeModal"
+        :handlerFunction="
+          (e) => {
+            e.stopPropagation(); // ⛔ oprește propagarea click-ului spre footer
+            closeModal();
+          }
+        "
         class="mt-4" />
     </div>
   </div>
